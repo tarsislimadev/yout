@@ -1,4 +1,6 @@
-import { HTML, nButton } from '@brtmvdl/frontend'
+import { HTML, nFlex, nImage, nLink } from '@brtmvdl/frontend'
+import { FormComponent } from './components/form.component.js'
+import { MessagesComponent } from './components/messages.component.js'
 
 export class Page extends HTML {
   state = {
@@ -7,25 +9,42 @@ export class Page extends HTML {
 
   children = {
     buttons: new HTML(),
+    logo: new HTML(),
+    form: new FormComponent(),
+    messages: new MessagesComponent(),
   }
 
   onCreate() {
-    this.state.socket.on('connection', (socket) => console.log('connection'))
-    this.setText('page')
-    this.append(this.getButtons())
+    this.append(this.getHeader())
+    this.append(this.getBody())
   }
 
-  getButtons() {
-    const html = new HTML()
-    html.append(this.createMessageButton('hello', () => 'world'))
-    html.append(this.createMessageButton('datetime', () => Date.now()))
+  getHeader() {
+    return this.getLogoLink()
+  }
+
+  getLogoLink() {
+    const logo = new HTML()
+    logo.setText('Yout')
+    logo.setStyle('padding', '1rem')
+    const link = new nLink()
+    link.href('?' + Date.now())
+    link.append(logo)
+    return this.children.logo.append(link)
+  }
+
+  getBody() {
+    const html = new nFlex()
+    html.append(this.getForm())
+    html.append(this.getMessages())
     return html
   }
 
-  createMessageButton(text, message = (() => '')) {
-    const button = new nButton()
-    button.setText(text)
-    button.on('click', () => this.state.socket.emit('message', message()))
-    return button
+  getForm() {
+    return this.children.form
+  }
+
+  getMessages() {
+    return this.children.messages
   }
 }
