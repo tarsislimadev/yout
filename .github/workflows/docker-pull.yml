@@ -9,4 +9,4 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      - run: docker pull tmvdl/projects:yout -a
+      - run: docker pull tmvdl/projects -a
