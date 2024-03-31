@@ -17,6 +17,7 @@ export class Page extends HTML {
   onCreate() {
     this.append(this.getHeader())
     this.append(this.getBody())
+    this.socketEvents()
   }
 
   getHeader() {
@@ -41,10 +42,20 @@ export class Page extends HTML {
   }
 
   getForm() {
+    this.children.form.on('submit', (data) => this.onFormSubmit(data))
     return this.children.form
+  }
+
+  onFormSubmit({ value: { name, url, method } } = {}) {
+    this.state.socket.emit('fetch', { name, url, method })
   }
 
   getMessages() {
     return this.children.messages
+  }
+
+  socketEvents() {
+    this.state.socket.on('fetch', ({ name, method, url, json }) => this.children.messages.dispatchEvent('fetch', { name, method, url, json }))
+    this.state.socket.on('fetch error', ({ name, method, url, error }) => this.children.messages.dispatchEvent('fetch error', { name, method, url, error }))
   }
 }
