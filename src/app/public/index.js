@@ -1,61 +1,57 @@
-import { HTML, nFlex, nImage, nLink } from '@brtmvdl/frontend'
-import { FormComponent } from './components/form.component.js'
-import { MessagesComponent } from './components/messages.component.js'
+import { HTML, nFlex } from '@brtmvdl/frontend'
+import { TopBarComponent, FormHTML, MessagesHTML } from './components/index.js'
+import { MessageModel } from './models/messages.model.js'
 
 export class Page extends HTML {
   state = {
-    socket: io('http://localhost:8080/'),
+    messages: [],
   }
 
   children = {
-    buttons: new HTML(),
-    logo: new HTML(),
-    form: new FormComponent(),
-    messages: new MessagesComponent(),
+    top_bar: new TopBarComponent(),
+    form: new FormHTML(),
+    messages: new MessagesHTML(),
   }
 
   onCreate() {
-    this.append(this.getHeader())
-    this.append(this.getBody())
-    this.socketEvents()
+    super.onCreate()
+    this.append(this.getTopBar())
+    this.append(this.getFlex())
   }
 
-  getHeader() {
-    return this.getLogoLink()
+  getTopBar() {
+    return this.children.top_bar
   }
 
-  getLogoLink() {
-    const logo = new HTML()
-    logo.setText('Yout')
-    logo.setStyle('padding', '1rem')
-    const link = new nLink()
-    link.href('?' + Date.now())
-    link.append(logo)
-    return this.children.logo.append(link)
+  getFlex() {
+    const flex = (window.innerWidth > window.innerHeight) ? new nFlex() : new HTML()
+    flex.append(this.getFormHTML())
+    flex.append(this.getMessagesHTML())
+    return flex
   }
 
-  getBody() {
-    const html = new nFlex()
-    html.append(this.getForm())
-    html.append(this.getMessages())
-    return html
-  }
-
-  getForm() {
-    this.children.form.on('submit', (data) => this.onFormSubmit(data))
+  getFormHTML() {
+    this.children.form.on('submit', (data) => this.onFormHtmlSubmit(data))
+    this.children.form.on('save', (data) => this.children.form.dispatchEvent('messages', this.state.messages))
     return this.children.form
   }
 
-  onFormSubmit({ value: { name, url, method } } = {}) {
-    this.state.socket.emit('fetch', { name, url, method })
+  onFormHtmlSubmit({ value: { method, input } } = {}) {
+    const message = new MessageModel(method, { input, side: 'input' })
+    this.sendMessage(message)
   }
 
-  getMessages() {
+  sendMessage(message = new MessageModel()) {
+    this.addMessage(message)
+    // send message
+  }
+
+  getMessagesHTML() {
     return this.children.messages
   }
 
-  socketEvents() {
-    this.state.socket.on('fetch', ({ name, method, url, json }) => this.children.messages.dispatchEvent('fetch', { name, method, url, json }))
-    this.state.socket.on('fetch error', ({ name, method, url, error }) => this.children.messages.dispatchEvent('fetch error', { name, method, url, error }))
+  addMessage(message = new MessageModel()) {
+    this.state.messages.push(message)
+    this.children.messages.dispatchEvent('message', message)
   }
 }
