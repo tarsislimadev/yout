@@ -4,6 +4,7 @@ import { CardFooterHTML } from '../card-footer.html.js'
 import { CardBodyHTML } from '../card-body.html.js'
 import { TextHTML } from '../text.html.js'
 import { CardHTML } from '../card.html.js'
+import * as str from '../../utils/str.js'
 
 export class MessageCardHTML extends CardHTML {
   data = null
@@ -23,7 +24,7 @@ export class MessageCardHTML extends CardHTML {
 
   getHeaderHTML() {
     const header = new CardHeaderHTML()
-    header.append(new TextHTML('header'))
+    header.append(new TextHTML(this.data.input.name))
     return header
   }
 
@@ -34,7 +35,7 @@ export class MessageCardHTML extends CardHTML {
   }
 
   getDataHTML(message = new Messagemodel()) {
-    switch(message.side) {
+    switch (message.side) {
       case 'input': return this.getInputHTML()
       case 'output': return this.getOutputHTML()
       case 'error': return this.getErrorHTML()
@@ -55,7 +56,10 @@ export class MessageCardHTML extends CardHTML {
 
   getFooterHTML() {
     const footer = new CardFooterHTML()
-    footer.append(new TextHTML('footer'))
+    const flex = new nFlex()
+    flex.append(new TextHTML(this.data.side))
+    flex.append(new TextHTML(this.data.id, str.timestamp2str(this.data.id)))
+    footer.append(flex)
     return footer
   }
 }

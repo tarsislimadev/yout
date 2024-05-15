@@ -44,12 +44,12 @@ export class Page extends HTML {
     this.addMessage(message)
     this.fetch(message.input.method, message.input.url, { query: message.input.query, headers: message.input.headers, body: message.input.body })
       .then((json) => this.addMessage(new MessageModel(message.method, { side: 'output', input: message.input, output: json })))
+      .catch((err) => this.addMessage(new MessageModel(message.method, { side: 'error', input: message.input, error: err })))
   }
 
   fetch(method, url, { query, headers, body } = {}) {
     return fetch(`${url}?${(new URLSearchParams(query)).toString()}`, { method, headers, body })
       .then((res) => res.json())
-      .catch((err) => console.error(err))
   }
 
   getMessagesHTML() {
