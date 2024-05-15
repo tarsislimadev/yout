@@ -49,7 +49,23 @@ export class FormHTML extends HTML {
   }
 
   onSendButtonClick() {
-    this.dispatchEvent('submit', console.log('submit'))
+    const endpoint = getEndpointFromList(this.getEndpointValue())
+    const queryValues = this.getQueryValues(endpoint)
+    const headersValues = this.getHeadersValues(endpoint)
+    const bodyValues = this.getBodyValues(endpoint)
+    this.dispatchEvent('submit', { method: endpoint.method, url: endpoint.url, query: queryValues, headers: headersValues, body: bodyValues })
+  }
+
+  getQueryValues({ query = [] } = {}) {
+    return Array.from(query).reduce((values, item) => ({ ...values, [item]: this.children.inputs.getValue(item) }), {})
+  }
+
+  getHeadersValues({ headers = [] } = {}) {
+    return {}
+  }
+
+  getBodyValues({ body = [] } = {}) {
+    return null
   }
 
   getEndpointValue() {

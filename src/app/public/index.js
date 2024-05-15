@@ -31,19 +31,25 @@ export class Page extends HTML {
   }
 
   getFormHTML() {
-    this.children.form.on('submit', (data) => this.onFormHtmlSubmit(data))
-    this.children.form.on('save', (data) => this.children.form.dispatchEvent('messages', this.state.messages))
+    this.children.form.on('submit', (ev) => this.onFormHtmlSubmit(ev))
     return this.children.form
   }
 
-  onFormHtmlSubmit({ value: { method, input } } = {}) {
-    const message = new MessageModel(method, { input, side: 'input' })
+  onFormHtmlSubmit({ value: { method, url, query, headers, body } } = {}) {
+    const message = new MessageModel(method, { input: { method, url, query, headers, body }, side: 'input' })
     this.sendMessage(message)
   }
 
   sendMessage(message = new MessageModel()) {
     this.addMessage(message)
-    // send message
+    this.fetch(message.input.method, message.input.url, { query: message.input.query, headers: message.input.headers, body: message.input.body })
+      .then((json) => console.log({ json, message }))
+  }
+
+  fetch(method, url, { query, headers, body } = {}) {
+    return fetch(`${url}?${(new URLSearchParams(query)).toString()}`, { method, headers, body })
+      .then((res) => res.json())
+      .catch((err) => console.error(err))
   }
 
   getMessagesHTML() {
