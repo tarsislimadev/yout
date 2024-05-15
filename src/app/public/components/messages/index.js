@@ -4,6 +4,7 @@ import { CardFooterHTML } from '../card-footer.html.js'
 import { CardBodyHTML } from '../card-body.html.js'
 import { TextHTML } from '../text.html.js'
 import { CardHTML } from '../card.html.js'
+import { KeyValueHTML } from '../key-value.html.js'
 import * as str from '../../utils/str.js'
 
 export class MessageCardHTML extends CardHTML {
@@ -40,6 +41,8 @@ export class MessageCardHTML extends CardHTML {
       case 'output': return this.getOutputHTML()
       case 'error': return this.getErrorHTML()
     }
+
+    return new HTML()
   }
 
   getInputHTML() {
@@ -90,16 +93,21 @@ export class TableMessageCardHTML extends MessageCardHTML {
   }
 }
 
-export class NewsApiEverythingMessageCardHTML extends MessageCardHTML {
+export class NewsApiEverythingMessageCardHTML extends TableMessageCardHTML {
   getInputHTML() {
+    const { apiKey, from, q, sortBy, to } = this.data.input.query
     const input = new CardBodyHTML()
-    input.setText('input')
+    input.append(new KeyValueHTML('q', q))
+    input.append(new KeyValueHTML('from', from))
+    input.append(new KeyValueHTML('to', to))
+    input.append(new KeyValueHTML('sortBy', sortBy))
+    // input.append(new KeyValueHTML('apiKey', apiKey))
     return input
   }
 
   getOutputHTML() {
     const output = new CardBodyHTML()
-    output.setText('output')
+    output.append(this.getTableHTML([]))
     return output
   }
 }
