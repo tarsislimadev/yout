@@ -1,18 +1,24 @@
 import { HTML } from '@brtmvdl/frontend'
-
 import { InputTextGroupComponent } from './input-text-group.component.js'
+import { padLeft } from '../utils/str.js'
 
 export class InputsComponent extends HTML {
   children = {
-    apiKey: new InputTextGroupComponent('apiKey'),
     q: new InputTextGroupComponent('q'),
-    from: new InputTextGroupComponent('from'),
+    from: new InputTextGroupComponent('from', this.getFromInputDate()),
     to: new InputTextGroupComponent('to'),
-    sortBy: new InputTextGroupComponent('sortBy'),
-    apiKey: new InputTextGroupComponent('apiKey'),
+    sortBy: new InputTextGroupComponent('sortBy', 'popularity'),
     country: new InputTextGroupComponent('country'),
     category: new InputTextGroupComponent('category'),
     apiKey: new InputTextGroupComponent('apiKey', '', 'password'),
+  }
+
+  getFromInputDate() {
+    const date = new Date()
+    const day = +date.getDate()
+    const month = +date.getMonth() + 1
+    const year = +date.getFullYear()
+    return [year, month, day].map((d) => padLeft(d, 2, '0')).join('-')
   }
 
   getComponent(component = '') {
