@@ -35,15 +35,15 @@ export class Page extends HTML {
     return this.children.form
   }
 
-  onFormHtmlSubmit({ value: { method, url, query, headers, body } } = {}) {
-    const message = new MessageModel(method, { input: { method, url, query, headers, body }, side: 'input' })
+  onFormHtmlSubmit({ value: { name, method, url, query, headers, body } } = {}) {
+    const message = new MessageModel(method, { input: { name, method, url, query, headers, body }, side: 'input' })
     this.sendMessage(message)
   }
 
   sendMessage(message = new MessageModel()) {
     this.addMessage(message)
     this.fetch(message.input.method, message.input.url, { query: message.input.query, headers: message.input.headers, body: message.input.body })
-      .then((json) => console.log({ json, message }))
+      .then((json) => this.addMessage(new MessageModel(message.method, { side: 'output', input: message.input, output: json })))
   }
 
   fetch(method, url, { query, headers, body } = {}) {

@@ -53,7 +53,7 @@ export class FormHTML extends HTML {
     const queryValues = this.getQueryValues(endpoint)
     const headersValues = this.getHeadersValues(endpoint)
     const bodyValues = this.getBodyValues(endpoint)
-    this.dispatchEvent('submit', { method: endpoint.method, url: endpoint.url, query: queryValues, headers: headersValues, body: bodyValues })
+    this.dispatchEvent('submit', { name: endpoint.name, method: endpoint.method, url: endpoint.url, query: queryValues, headers: headersValues, body: bodyValues })
   }
 
   getQueryValues({ query = [] } = {}) {
