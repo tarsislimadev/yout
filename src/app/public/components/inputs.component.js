@@ -10,6 +10,9 @@ export class InputsComponent extends HTML {
     sortBy: new InputTextGroupComponent('sortBy', 'popularity'),
     country: new InputTextGroupComponent('country'),
     category: new InputTextGroupComponent('category'),
+    language: new InputTextGroupComponent('language', 'pt'), // FIXME: select instead input text
+    pageSize: new InputTextGroupComponent('pageSize', '100'),
+    page: new InputTextGroupComponent('page', '1'),
     apiKey: new InputTextGroupComponent('apiKey', '', 'password'),
   }
 

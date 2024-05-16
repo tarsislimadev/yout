@@ -4,6 +4,6 @@ export const getEndpointFromList = (name = '') => getEndpointsList().find((reque
 
 export const getEndpointsList = () => Array.from([
   new RequestModel('Yout APIs'),
-  new RequestModel('News API (everything)', 'GET', 'https://newsapi.org/v2/everything', { query: ['q', 'from', 'to', 'sortBy', 'apiKey'] }),
-  new RequestModel('News API (top headlines)', 'GET', 'https://newsapi.org/v2/top-headlines', { query: ['country', 'category', 'apiKey'] }),
+  new RequestModel('News API (everything)', 'GET', 'https://newsapi.org/v2/everything', { query: ['from', 'to', 'language', 'sortBy', 'q', 'pageSize', 'page', 'apiKey'] }),
+  new RequestModel('News API (top headlines)', 'GET', 'https://newsapi.org/v2/top-headlines', { query: ['country', 'category', 'q', 'pageSize', 'page', 'apiKey'] }),
 ])
