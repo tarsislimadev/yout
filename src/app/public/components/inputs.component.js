@@ -14,6 +14,9 @@ export class InputsComponent extends HTML {
     pageSize: new InputTextGroupComponent('pageSize', '100'),
     page: new InputTextGroupComponent('page', '1'),
     apiKey: new InputTextGroupComponent('apiKey', '', 'password'),
+    key: new InputTextGroupComponent('key', '', 'password'),
+    src: new InputTextGroupComponent('src'), // FIXME: parse to "url decoded string"
+    hl: new InputTextGroupComponent('hl', 'pt-br'),
   }
 
   getFromInputDate() {

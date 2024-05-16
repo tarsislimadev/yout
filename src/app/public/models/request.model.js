@@ -7,8 +7,9 @@ export class RequestModel extends JSONableModel {
   query = ''
   headers = ''
   body = ''
+  content_type = ''
 
-  constructor(name, method, url, { query = [], headers = [], body = null } = {}) {
+  constructor(name, method, url, { query = [], headers = [], body = null } = {}, { content_type = 'application/json' } = {}) {
     super()
     this.name = name
     this.method = method
@@ -16,6 +17,7 @@ export class RequestModel extends JSONableModel {
     this.query = query
     this.headers = headers
     this.body = body
+    this.content_type = content_type
   }
 
 }
