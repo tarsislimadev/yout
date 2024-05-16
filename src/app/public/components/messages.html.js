@@ -20,8 +20,8 @@ export class MessagesHTML extends HTML {
     switch (message.input.name) {
       case 'News API (everything)': return new messages.NewsApiEverythingMessageCardHTML(message)
       case 'News API (top headlines)': return new messages.NewsApiTopHeadlinesMessageCardHTML(message)
+      case 'Voice RSS API (text to speech)': return new messages.VoiceRssApiMessageCardHTML(message)
     }
-
     return new HTML()
   }
 }

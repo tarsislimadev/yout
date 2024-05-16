@@ -1,10 +1,11 @@
 import { HTML, nFlex, nTable, nTr, nTd } from '@brtmvdl/frontend'
 import { CardHeaderHTML } from '../card-header.html.js'
 import { CardFooterHTML } from '../card-footer.html.js'
+import { KeyValueHTML } from '../key-value.html.js'
 import { CardBodyHTML } from '../card-body.html.js'
 import { TextHTML } from '../text.html.js'
 import { CardHTML } from '../card.html.js'
-import { KeyValueHTML } from '../key-value.html.js'
+import { AudioHTML } from '../audio.html.js'
 import * as str from '../../utils/str.js'
 
 export class MessageCardHTML extends CardHTML {
@@ -30,13 +31,7 @@ export class MessageCardHTML extends CardHTML {
   }
 
   getBodyHTML() {
-    const body = new CardBodyHTML()
-    this.append(this.getDataHTML(this.data))
-    return body
-  }
-
-  getDataHTML(message = new Messagemodel()) {
-    switch (message.side) {
+    switch (this.data.side) {
       case 'input': return this.getInputHTML()
       case 'output': return this.getOutputHTML()
       case 'error': return this.getErrorHTML()
@@ -54,7 +49,9 @@ export class MessageCardHTML extends CardHTML {
   }
 
   getErrorHTML() {
-    return new HTML()
+    const body = new CardBodyHTML()
+    body.setText(this.data.error.message)
+    return body
   }
 
   getFooterHTML() {
@@ -120,5 +117,21 @@ export class NewsApiTopHeadlinesMessageCardHTML extends NewsApiEverythingMessage
     input.append(new KeyValueHTML('country', country))
     input.append(new KeyValueHTML('category', category))
     return input
+  }
+}
+
+export class VoiceRssApiMessageCardHTML extends MessageCardHTML {
+  getInputHTML() {
+    const input = new CardBodyHTML()
+    input.append(new KeyValueHTML('src', this.data.input.query.src))
+    input.append(new KeyValueHTML('hl', this.data.input.query.hl))
+    return input
+  }
+
+  getOutputHTML() {
+    const output = new CardBodyHTML()
+    output.setText('Audio:')
+    output.append(new AudioHTML('url'))
+    return output
   }
 }
