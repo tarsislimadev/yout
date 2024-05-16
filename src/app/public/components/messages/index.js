@@ -95,19 +95,19 @@ export class TableMessageCardHTML extends MessageCardHTML {
 
 export class NewsApiEverythingMessageCardHTML extends TableMessageCardHTML {
   getInputHTML() {
-    const { apiKey, from, q, sortBy, to } = this.data.input.query
+    const { from, q, sortBy, to } = this.data.input.query
     const input = new CardBodyHTML()
     input.append(new KeyValueHTML('q', q))
     input.append(new KeyValueHTML('from', from))
     input.append(new KeyValueHTML('to', to))
     input.append(new KeyValueHTML('sortBy', sortBy))
-    // input.append(new KeyValueHTML('apiKey', apiKey))
     return input
   }
 
   getOutputHTML() {
+    const { articles } = this.data.output
     const output = new CardBodyHTML()
-    output.append(this.getTableHTML([]))
+    output.append(this.getTableHTML(articles))
     return output
   }
 }
