@@ -19,7 +19,9 @@ export class MessagesHTML extends HTML {
   getMessageHTML(message) {
     switch (message.input.name) {
       case 'News API (everything)': return new messages.NewsApiEverythingMessageCardHTML(message)
+      case 'News API (top headlines)': return new messages.NewsApiTopHeadlinesMessageCardHTML(message)
     }
+
     return new HTML()
   }
 }

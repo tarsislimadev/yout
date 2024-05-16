@@ -111,3 +111,13 @@ export class NewsApiEverythingMessageCardHTML extends TableMessageCardHTML {
     return output
   }
 }
+
+export class NewsApiTopHeadlinesMessageCardHTML extends NewsApiEverythingMessageCardHTML {
+  getInputHTML() {
+    const { country, category } = this.data.input.query
+    const input = new CardBodyHTML()
+    input.append(new KeyValueHTML('country', country))
+    input.append(new KeyValueHTML('category', category))
+    return input
+  }
+}
