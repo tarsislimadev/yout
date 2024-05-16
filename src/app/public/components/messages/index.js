@@ -105,7 +105,7 @@ export class NewsApiEverythingMessageCardHTML extends TableMessageCardHTML {
   }
 
   getOutputHTML() {
-    const { articles } = this.data.output
+    const articles = Array.from(this.data.output.articles).map(({ author, title, description, url, urlToImage, publishedAt, content }) => ({ title, url, description, content, urlToImage, author, publishedAt }))
     const output = new CardBodyHTML()
     output.append(this.getTableHTML(articles))
     return output
