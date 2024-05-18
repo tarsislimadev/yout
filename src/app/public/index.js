@@ -5,12 +5,28 @@ import { MessageModel } from './models/messages.model.js'
 export class Page extends HTML {
   state = {
     messages: [],
+    socket: this.getSocketConnection(),
   }
 
   children = {
     top_bar: new TopBarComponent(),
     form: new FormHTML(),
     messages: new MessagesHTML(),
+  }
+
+  getSocketConnection() {
+    const socket = io('/')
+    socket.on('connect', (data) => this.onSocketConnect(data, socket))
+    socket.on('disconnect', () => this.onSocketDisconnect(null, socket))
+    return socket
+  }
+
+  onSocketConnect(data, socket) {
+    this.addMessage(new MessageModel('connect', { side: 'input', input: { id: socket.id } }))
+  }
+
+  onSocketDisconnect(_, socket) {
+    this.addMessage(new MessageModel('disconnect', { side: 'input', input: { id: socket.id } }))
   }
 
   onCreate() {
@@ -36,20 +52,12 @@ export class Page extends HTML {
   }
 
   onFormHtmlSubmit({ value: { name, method, url, query, headers, body } } = {}) {
-    const message = new MessageModel(method, { input: { name, method, url, query, headers, body }, side: 'input' })
-    this.sendMessage(message)
+    this.sendMessage(new MessageModel(name, { side: 'input', input: { method, url, query, headers, body } }))
   }
 
   sendMessage(message = new MessageModel()) {
     this.addMessage(message)
-    this.fetch(message.input.method, message.input.url, { query: message.input.query, headers: message.input.headers, body: message.input.body })
-      .then((json) => this.addMessage(new MessageModel(message.method, { side: 'output', input: message.input, output: json })))
-      .catch((err) => this.addMessage(new MessageModel(message.method, { side: 'error', input: message.input, error: err })))
-  }
-
-  fetch(method, url, { query, headers, body } = {}) {
-    return fetch(`${url}?${(new URLSearchParams(query)).toString()}`, { method, headers, body })
-      .then((res) => res.json())
+    this.state.socket.send(message.toString())
   }
 
   getMessagesHTML() {

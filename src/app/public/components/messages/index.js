@@ -26,7 +26,7 @@ export class MessageCardHTML extends CardHTML {
 
   getHeaderHTML() {
     const header = new CardHeaderHTML()
-    header.append(new TextHTML(this.data.input.name))
+    header.append(new TextHTML(this.data.name))
     return header
   }
 
@@ -49,9 +49,7 @@ export class MessageCardHTML extends CardHTML {
   }
 
   getErrorHTML() {
-    const body = new CardBodyHTML()
-    body.setText(this.data.error.message)
-    return body
+    return new HTML()
   }
 
   getFooterHTML() {
@@ -135,3 +133,7 @@ export class VoiceRssApiMessageCardHTML extends MessageCardHTML {
     return output
   }
 }
+
+export class ConnectMessageCardHTML extends MessageCardHTML { }
+
+export class DisconnectMessageCardHTML extends MessageCardHTML { }

@@ -17,7 +17,9 @@ export class MessagesHTML extends HTML {
   }
 
   getMessageHTML(message) {
-    switch (message.input.name) {
+    switch (message.name) {
+      case 'connect': return new messages.ConnectMessageCardHTML(message)
+      case 'disconnect': return new messages.DisconnectMessageCardHTML(message)
       case 'News API (everything)': return new messages.NewsApiEverythingMessageCardHTML(message)
       case 'News API (top headlines)': return new messages.NewsApiTopHeadlinesMessageCardHTML(message)
       case 'Voice RSS API (text to speech)': return new messages.VoiceRssApiMessageCardHTML(message)
