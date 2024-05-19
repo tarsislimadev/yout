@@ -1,7 +1,7 @@
 const { Database } = require('@brtmvdl/database')
 const express = require('express')
 const { Server } = require('socket.io')
-const config = require('./config.js')
+
 const app = express()
 const server = require('http').createServer(app)
 const io = new Server(server)
@@ -34,9 +34,9 @@ io.on('connection', (socket) => {
 
   const chooseRequest = (name, method, url, { query = {}, headers = {}, body = null } = {}) => {
     switch (name) {
-      case 'News API (everything)': return request(name, method, url, { query: { ...query, 'apiKey': config.api_key.news_api }, headers, body })
-      case 'News API (top headlines)': return request(name, method, url, { query: { ...query, 'apiKey': config.api_key.news_api }, headers, body })
-      case 'Voice RSS API (text to speech)': return voicerss_request(name, method, url, { query: { ...query, 'key': config.api_key.voice_api }, headers, body })
+      case 'News API (everything)': return request(name, method, url, { query: { ...query, 'apiKey': process.env.NEWSAPI_APIKEY }, headers, body })
+      case 'News API (top headlines)': return request(name, method, url, { query: { ...query, 'apiKey': process.env.NEWSAPI_APIKEY }, headers, body })
+      case 'Voice RSS API (text to speech)': return voicerss_request(name, method, url, { query: { ...query, 'key': process.env.VOICERSS_APIKEY }, headers, body })
     }
 
     return request(name, method, url, { query, headers, body })
