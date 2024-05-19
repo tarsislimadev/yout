@@ -1,17 +1,21 @@
 const { Database } = require('@brtmvdl/database')
 const express = require('express')
 const { Server } = require('socket.io')
-
 const app = express()
 const server = require('http').createServer(app)
 const io = new Server(server)
 const db = new Database({ type: 'fs', config: '/data' })
 
 app.use(express.static('public'))
+app.use(express.json())
 
 const fullurl = (url, query = {}) => `${url}?${(new URLSearchParams(query)).toString()}`
 
 const savefile = (name, file = 'file') => db.in('files').new().write('name', name).write('file', file)
+
+app.get('/wav/:id', ({ params: { id } }, res) => res.set('Content-Type', 'audio/wav').send(db.in('files').findById(id).read('file')))
+
+app.get('/wavs', (_, res) => res.json({ list: db.in('files').list().map(({ id }) => ({ id })) }))
 
 io.on('connection', (socket) => {
   console.log('connected', socket.id)
