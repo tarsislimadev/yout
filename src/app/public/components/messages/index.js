@@ -100,8 +100,30 @@ export class NewsApiEverythingMessageCardHTML extends TableMessageCardHTML {
   }
 
   getOutputHTML() {
-    const articles = Array.from(this.data.output.articles).map(({ author, title, description, url, urlToImage, publishedAt, content }) => ({ title, url, description, content, urlToImage, author, publishedAt }))
     const output = new CardBodyHTML()
+    output.append(this.getOutputBodyHTML())
+    return output
+  }
+
+  getOutputBodyHTML() {
+    switch (this.data.output.status) {
+      case 'error': return this.getOutputErrorHTML()
+      case 'ok': return this.getOutputOkHTML()
+    }
+
+    return new TextHTML('News Api Everything')
+  }
+
+  getOutputErrorHTML() {
+    const html = new HTML()
+    html.append(new TextHTML(`Message: ${this.data.output.message}`))
+    html.append(new TextHTML(`Code: ${this.data.output.code}`))
+    return html
+  }
+
+  getOutputOkHTML() {
+    const articles = Array.from(this.data.output.articles).map(({ author, title, description, url, urlToImage, publishedAt, content }) => ({ title, url, description, content, urlToImage, author, publishedAt }))
+    const output = new HTML()
     output.append(new KeyValueHTML('Total of results', this.data.output.totalResults))
     output.append(this.getTableHTML(articles))
     return output

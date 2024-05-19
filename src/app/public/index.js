@@ -23,6 +23,16 @@ export class Page extends HTML {
 
   onSocketConnect(data, socket) {
     this.addMessage(new MessageModel('connect', { side: 'input', input: { id: socket.id } }))
+    this.state.socket.on('fetch', (data) => this.onSocketFetch(data))
+    this.state.socket.on('fetch error', (data) => this.onSocketFetchError(data))
+  }
+
+  onSocketFetch(data) {
+    this.addMessage(new MessageModel(data.name, { side: 'output', output: data.json }))
+  }
+
+  onSocketFetchError(data) {
+    this.addMessage(new MessageModel(data.name, { side: 'error', error: data.json }))
   }
 
   onSocketDisconnect(_, socket) {
