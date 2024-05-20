@@ -1,12 +1,14 @@
 const { Database } = require('@brtmvdl/database')
 const express = require('express')
 const { Server } = require('socket.io')
-const app = express()
-const server = require('http').createServer(app)
 const io = new Server(server)
 const db = new Database({ type: 'fs', config: '/data' })
 
+const app = express()
+const server = require('http').createServer(app)
+
 app.use(express.static('public'))
+
 app.use(express.json())
 
 const fullurl = (url, query = {}) => `${url}?${(new URLSearchParams(query)).toString()}`
