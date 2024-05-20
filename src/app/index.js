@@ -1,11 +1,11 @@
 const { Database } = require('@brtmvdl/database')
 const express = require('express')
 const { Server } = require('socket.io')
-const io = new Server(server)
 const db = new Database({ type: 'fs', config: '/data' })
 
 const app = express()
 const server = require('http').createServer(app)
+const io = new Server(server)
 
 app.use(express.static('public'))
 
