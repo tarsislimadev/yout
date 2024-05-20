@@ -2,6 +2,8 @@ const { Database } = require('@brtmvdl/database')
 const express = require('express')
 const { Server } = require('socket.io')
 const db = new Database({ type: 'fs', config: '/data' })
+const { URLSearchParams } = require('url')
+const { exec } = require('child_process')
 
 const app = express()
 const server = require('http').createServer(app)
@@ -25,12 +27,12 @@ io.on('connection', (socket) => {
   const emit = (event, ...args) => socket.emit(event, ...args)
 
   const voicerss_request = (name, method, url, { query = {}, headers = {}, body = null } = {}) =>
-    fetch(fullurl(url, query), { method, headers, body })
-      .then((res) => res.blob().then((b) => b.stream()))
-      .then((stream) => stream.getReader().read())
-      .then((file) => savefile(`${Date.now()}`, Buffer.from([...file.value]).toString()))
-      .then((json) => emit('fetch', { name, method, url, json }))
-      .catch((err) => [emit('fetch error', { name, method, url, err: { message: err.message } }), console.error(err)])
+    new Promise((resolve, reject) => {
+      const file = db.in('files').new()
+      file.writeMany({ name, method, url, query: query?.toString(), headers: headers?.toString(), body: body?.toString() })
+      const command = `curl "http://api.voicerss.org/?${(new URLSearchParams({ key: process.env.VOICERSS_APIKEY, ...query })).toString()}" --output "/data/files/${file.id}/file.wav" `
+      exec(command, (err, stdout, stderr) => console.log({ err, stdout, stderr }))
+    })
 
   const request = (name, method, url, { query = {}, headers = {}, body = null } = {}) =>
     fetch(fullurl(url, query), { method, headers, body })
