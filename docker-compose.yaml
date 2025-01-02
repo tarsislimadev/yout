@@ -9,3 +9,11 @@ services:
       - './data:/data'
     ports:
       - '8080:80'
+
+  googleapis:
+    build: './src/googleapis/'
+    volumes:
+      - './src/googleapis/:/app'
+      - './data:/data'
+    tty: true
+    stdin_open: true
